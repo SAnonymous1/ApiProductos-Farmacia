@@ -1,0 +1,274 @@
+openapi: 3.0.0
+info:
+  title: API de Productos de Farmacia
+  version: 1.0.0
+  description: API para la gestión de productos en una farmacia.
+
+servers:
+  - url: https://r7gyx41h7a.execute-api.us-east-1.amazonaws.com/dev # Tener en cuenta el id ese, osea r7gyx41h7a al momento de crear 
+    description: Entorno de desarrollo
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Producto:
+      type: object
+      properties:
+        tenant_id:
+          type: string
+          description: ID del inquilino.
+          example: "Ej1"
+        producto_id:
+          type: string
+          description: ID único del producto.
+          example: "producto1"
+        description:
+          type: string
+          description: Descripción del producto.
+          example: "Tabletas de ibuprofeno, caja x 20 unidades"
+        price:
+          type: number
+          format: float
+          description: Precio del producto.
+          example: 15.50
+        stock:
+          type: integer
+          description: Cantidad en stock.
+          example: 120
+        category:
+          type: string
+          description: Categoría del producto.
+          example: "Analgésicos"
+        tags:
+          type: array
+          items:
+            type: string
+          description: Etiquetas asociadas al producto.
+          example: ["analgésico", "antiinflamatorio"]
+        createdAt:
+          type: string
+          format: date-time
+          description: Fecha y hora de creación.
+          example: "2025-07-13T12:00:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          description: Fecha y hora de la última actualización.
+          example: "2025-07-13T12:00:00Z"
+
+    ProductoCreacion:
+      type: object
+      required:
+        - "tenant_id"
+        - producto_id
+        - description
+        - price
+        - stock
+        - category
+      properties:
+        tenant_id:
+          type: string
+          description: ID del tenant
+          example: "Ej1"
+        producto_id:
+          type: string
+          description: ID único del producto.
+          example: "producto1"
+        description:
+          type: string
+          description: Descripción del producto.
+          example: "Tabletas de ibuprofeno, caja x 20 unidades"
+        price:
+          type: number
+          format: float
+          description: Precio del producto.
+          example: 15.50
+        stock:
+          type: integer
+          description: Cantidad en stock.
+          example: 120
+        category:
+          type: string
+          description: Categoría del producto.
+          example: "Analgésicos"
+        tags:
+          type: array
+          items:
+            type: string
+          description: Etiquetas asociadas al producto.
+          example: ["analgésico", "antiinflamatorio"]
+
+paths:
+  /productos/listar:
+    post:
+      summary: Lista productos por tenant_id
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tenant_id:
+                  type: string
+                  description: ID del inquilino.
+                  example: "Ej1"
+      responses:
+        '200':
+          description: Lista de productos obtenida exitosamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Producto'
+        '400':
+          description: Faltan parámetros.
+        '401':
+          description: No autorizado.
+        '500':
+          description: Error interno del servidor.
+
+  /productos/crear:
+    post:
+      summary: Crea un nuevo producto
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductoCreacion'
+      responses:
+        '201':
+          description: Producto creado exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Producto'
+        '400':
+          description: Faltan parámetros.
+        '409':
+          description: El producto ya existe.
+        '401':
+          description: No autorizado.
+        '500':
+          description: Error interno del servidor.
+
+  /productos/buscar:
+    post:
+      summary: Busca un producto específico
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tenant_id:
+                  type: string
+                  description: ID del inquilino.
+                  example: "Ej1"
+                producto_id:
+                  type: string
+                  description: ID del producto.
+                  example: "producto1"
+      responses:
+        '200':
+          description: Producto encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Producto'
+        '400':
+          description: Faltan parámetros.
+        '404':
+          description: Producto no encontrado.
+        '401':
+          description: No autorizado.
+        '500':
+          description: Error interno del servidor.
+
+  /productos/modificar:
+    put:
+      summary: Modifica un producto existente
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tenant_id:
+                  type: string
+                  description: ID del inquilino.
+                  example: "Ej1"
+                producto_id:
+                  type: string
+                  description: ID del producto.
+                  example: "producto1"
+                datos:
+                  type: object
+                  description: Campos a modificar del producto.
+                  example:
+                    price: 18.00
+                    stock: 100
+                    description: "Tabletas de ibuprofeno, caja x 30 unidades"
+      responses:
+        '200':
+          description: Producto modificado exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Producto'
+        '400':
+          description: Faltan parámetros.
+        '401':
+          description: No autorizado.
+        '500':
+          description: Error interno del servidor.
+
+  /productos/eliminar:
+    delete:
+      summary: Elimina un producto
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tenant_id:
+                  type: string
+                  description: ID del inquilino.
+                  example: "Ej1"
+                producto_id:
+                  type: string
+                  description: ID del producto.
+                  example: "producto1"
+      responses:
+        '204':
+          description: Producto eliminado exitosamente.
+        '400':
+          description: Faltan parámetros.
+        '401':
+          description: No autorizado.
+        '500':
+          description: Error interno del servidor.
