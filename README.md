@@ -25,7 +25,7 @@
 - Hacer docker compose up -d
 - Hacer curl -X PUT http://IP-DE-MV-BÚSQUEDA:9200/idx_productos
 - Probar añadiendo productos, modificando y eliminando, hacer curl "http://IP-DE-MV-BÚSQUEDA:9200/idx_productos/_search?q=producto_id:producto2&pretty" cada vez que hagas un método.
-
+- PARA PROBAR SWAGGER UI, PONER LA URL EN EL BUSCADOR https://1tcf5g4quh.execute-api.us-east-1.amazonaws.com/(dev,test,prod)/docs-ui QUE VA A SALIR CUANDO SE HAGA sls deploy EN CUALQUIER STAGE
 ## Métodos: Se puede probar en postman en el .postman_collection que está en este github
 - POST ListarProductos
 - POST CrearProducto
