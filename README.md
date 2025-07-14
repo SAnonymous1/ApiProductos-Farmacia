@@ -40,5 +40,5 @@ También se añadieron funciones de Usuario para seguir:
 - curl http://IP-DE-MV-BÚSQUEDA:9200/idx_productos/_search?q=producto_id:nuevo_id
 - curl "http://IP-DE-MV-BÚSQUEDA:9200/idx_productos/_search?q=producto_id:producto2&pretty"
 
-#Fuente:
+# Fuente:
 - https://swagger-io.translate.goog/specification/?_x_tr_sl=en&_x_tr_tl=es&_x_tr_hl=es&_x_tr_pto=tc
