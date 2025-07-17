@@ -11,7 +11,7 @@ export const handler = async (event) => {
 
   for (const record of event.Records) {
     const keys = unmarshall(record.dynamodb.Keys);
-    const id   = keys.producto_id;
+    const id   = `${keys.tenant_id}#${keys.producto_id}`;
 
     if (record.eventName === 'REMOVE') {
       console.log(`🗑️ Eliminando ID: ${id}`);
